@@ -48,6 +48,7 @@ public OnPluginStart()
 	LoadTranslations("store.phrases");
 
 	CreateTimer(g_timeInSeconds, ForgivePoints, _, TIMER_REPEAT);
+	HookEvent("player_death", Event_PlayerDeath);
 }
 
 /**
@@ -148,6 +149,50 @@ public Action:ForgivePoints(Handle:timer)
 	}
 
 	Store_GiveDifferentCreditsToUsers(accountIds, count, credits);
+}
+
+public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	decl String:weapon[64];
+	new victimId = GetEventInt(event, "userid");
+	new attackerId = GetEventInt(event, "attacker");
+	new bool:headshot = GetEventBool(event, "headshot");
+	GetEventString(event, "weapon", weapon, sizeof(weapon));
+	new winners[1];
+ 
+	decl String:aname[64];
+	new victim = GetClientOfUserId(victimId);
+	new attacker = GetClientOfUserId(attackerId);
+	winners[0] = attackerId;
+	GetClientName(victim, aname, sizeof(aname));
+	
+	decl String:headshot_text[11];
+	decl String:plural[1];
+	new credits[1];
+	if (headshot)
+	{
+		headshot_text = " (headshot)";
+		credits[0] = 3;
+	}
+	else
+	{
+		headshot_text = "";
+		credits[0] = 1;
+	}
+	
+	if (credits[0] == 1)
+		plural = "";
+	else
+		plural = "s";
+		
+	Store_GiveDifferentCreditsToUsers(winners, 1, credits);
+	PrintToChat(attacker,
+		"%sEarned %d credit%s for killing %s%s",
+		STORE_PREFIX,
+		credits[0],
+		plural,
+		aname,
+		headshot_text);
 }
 
 Calculate(client, const String:map[], clientCount)
