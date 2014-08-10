@@ -25,12 +25,13 @@ new String:g_currencyName[64];
 
 new Float:g_timeInSeconds;
 new bool:g_enableMessagePerTick;
+new bool:g_enableMessagePerKill;
 
 new g_baseMinimum;
 new g_baseMaximum;
 
-new g_killCredits = 3;
-new g_hsCredits = 2;
+new g_killCredits = 0;
+new g_hsCredits = 0;
 
 new g_filters[MAX_FILTERS][Filter];
 new g_filterCount;
@@ -82,11 +83,14 @@ LoadConfig()
 
 	g_timeInSeconds = KvGetFloat(kv, "time_per_distribute", 180.0);
 	g_enableMessagePerTick = bool:KvGetNum(kv, "enable_message_per_distribute", 0);
+	g_enableMessagePerKill = bool:KvGetNum(kv, "enable_message_per_kill_credit", 0);
 
 	if (KvJumpToKey(kv, "distribution"))
 	{
 		g_baseMinimum = KvGetNum(kv, "base_minimum", 1);
 		g_baseMaximum = KvGetNum(kv, "base_maximum", 3);
+		g_killCredits = KvGetNum(kv, "kill_credits", 0);
+		g_hsCredits = KvGetNum(kv, "headshot_credits", 0);
 
 		if (KvJumpToKey(kv, "filters"))
 		{
@@ -171,21 +175,27 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 	if (g_killCredits > 0)
 	{	
 		Store_GiveCredits(winnerId, g_killCredits);
-		PrintToChat(attacker,
-			"%sEarned %d %s for killing %s",
-			STORE_PREFIX,
-			g_killCredits,
-			Pluralify(g_killCredits),
-			victim_name);
+		if (g_enableMessagePerKill)
+		{
+			PrintToChat(attacker,
+				"%sEarned %d %s for killing %s",
+				STORE_PREFIX,
+				g_killCredits,
+				Pluralify(g_killCredits),
+				victim_name);
+		}
 	}
 	if (headshot && g_hsCredits > 0)
 	{
 		Store_GiveCredits(winnerId, g_hsCredits);
-		PrintToChat(attacker,
-			"%sEarned %d %s for headshot",
-			STORE_PREFIX,
-			g_hsCredits,
-			Pluralify(g_hsCredits));
+		if (g_enableMessagePerKill)
+		{
+			PrintToChat(attacker,
+				"%sEarned %d %s for headshot",
+				STORE_PREFIX,
+				g_hsCredits,
+				Pluralify(g_hsCredits));
+		}
 	}
 }
 
