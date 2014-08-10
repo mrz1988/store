@@ -2,6 +2,8 @@
 
 #include <sourcemod>
 #include <store>
+#include <store/store-backend>
+#include <cstrike>
 
 #define MAX_FILTERS 128
 
@@ -26,6 +28,9 @@ new bool:g_enableMessagePerTick;
 
 new g_baseMinimum;
 new g_baseMaximum;
+
+new g_killCredits = 3;
+new g_hsCredits = 2;
 
 new g_filters[MAX_FILTERS][Filter];
 new g_filterCount;
@@ -153,46 +158,45 @@ public Action:ForgivePoints(Handle:timer)
 
 public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	decl String:weapon[64];
 	new victimId = GetEventInt(event, "userid");
 	new attackerId = GetEventInt(event, "attacker");
 	new bool:headshot = GetEventBool(event, "headshot");
-	GetEventString(event, "weapon", weapon, sizeof(weapon));
-	new winners[1];
  
-	decl String:aname[64];
+	decl String:victim_name[64];
 	new victim = GetClientOfUserId(victimId);
 	new attacker = GetClientOfUserId(attackerId);
-	winners[0] = attackerId;
-	GetClientName(victim, aname, sizeof(aname));
+	GetClientName(victim, victim_name, sizeof(victim_name));
+	new winnerId = GetSteamAccountID(attacker);
 	
-	decl String:headshot_text[11];
-	decl String:plural[1];
-	new credits[1];
-	if (headshot)
-	{
-		headshot_text = " (headshot)";
-		credits[0] = 3;
+	if (g_killCredits > 0)
+	{	
+		Store_GiveCredits(winnerId, g_killCredits);
+		PrintToChat(attacker,
+			"%sEarned %d %s for killing %s",
+			STORE_PREFIX,
+			g_killCredits,
+			Pluralify(g_killCredits),
+			victim_name);
 	}
-	else
+	if (headshot && g_hsCredits > 0)
 	{
-		headshot_text = "";
-		credits[0] = 1;
+		Store_GiveCredits(winnerId, g_hsCredits);
+		PrintToChat(attacker,
+			"%sEarned %d %s for headshot",
+			STORE_PREFIX,
+			g_hsCredits,
+			Pluralify(g_hsCredits));
 	}
-	
-	if (credits[0] == 1)
-		plural = "";
+}
+
+Pluralify(num_credits)
+{
+	decl String:output[10];
+	if (num_credits == 1)
+		output = "credit";
 	else
-		plural = "s";
-		
-	Store_GiveDifferentCreditsToUsers(winners, 1, credits);
-	PrintToChat(attacker,
-		"%sEarned %d credit%s for killing %s%s",
-		STORE_PREFIX,
-		credits[0],
-		plural,
-		aname,
-		headshot_text);
+		output = "credits";
+	return output;
 }
 
 Calculate(client, const String:map[], clientCount)
