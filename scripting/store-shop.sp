@@ -209,7 +209,7 @@ public GetItemsForCategoryCallback(ids[], count, any:pack)
 	if (client == 0)
 		return;
 
-	if (g_hideEmptyCategories && count != 0)
+	if (g_hideEmptyCategories || count > 0)
 	{
 		decl String:displayName[STORE_MAX_DISPLAY_NAME_LENGTH];
 		Store_GetCategoryDisplayName(categoryId, displayName, sizeof(displayName));
