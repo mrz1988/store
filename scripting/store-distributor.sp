@@ -41,7 +41,7 @@ public Plugin:myinfo =
 	author      = "alongub",
 	description = "Distributor component for [Store]",
 	version     = STORE_VERSION,
-	url         = "https://github.com/alongubkin/store"
+	url         = "https://github.com/mrz1988/store"
 };
 
 /**

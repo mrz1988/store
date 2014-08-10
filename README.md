@@ -3,7 +3,7 @@
 ## Description
 An open store plugin for SourceMod. 
 
-More documentation and tutorials can be found at [our wiki](https://github.com/alongubkin/store/wiki).
+More documentation and tutorials can be found at [our wiki](https://github.com/mrz1988/store/wiki).
 
 ### Requirements
 
@@ -38,10 +38,10 @@ Just download the attached zip archive and extract to your sourcemod folder inta
     
 Then, navigate to `configs/store/sql-init-scripts` and execute `store.sql` in your database. For each item module you want to add, execute the corresponding SQL file in `configs/store/sql-init-scripts` and enable the plugin.
 
-([Tutorial](https://github.com/alongubkin/store/wiki/Installing-Store))
+([Tutorial](https://github.com/mrz1988/store/wiki/Installing-Store))
 ## License
 
-Copyright (C) 2013  Alon Gubkin
+Copyright (C) 2013-2014  Alon Gubkin, Matt Zychowski
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
