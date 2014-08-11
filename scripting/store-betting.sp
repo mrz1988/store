@@ -55,7 +55,7 @@ public OnPluginStart()
 	}
 	
 	LoadTranslations("common.phrases");
-	LoadTranslations("plugin.teambets");	
+	LoadTranslations("store.betphrases");	
 
 	CreateConVar("sm_teambets_version", PLUGIN_VERSION, "TeamBets Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
