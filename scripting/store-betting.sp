@@ -418,10 +418,10 @@ public Bet(client, team, amount, clientCredits)
 
 public InsufficientFunds(client)
 {
-	PrintToChatAll("Insufficient Funds");
+	PrintToChat(client, "[Bet] %t", "Not Enough Money");
 }
 
 public InvalidBet(client)
 {
-	PrintToChatAll("Invalid Bet");
+	PrintToChat(client, "[Bet] %t", "Invalid Bet Amount");
 }
