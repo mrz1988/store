@@ -394,17 +394,17 @@ public Bet(client, team, amount, clientCredits)
 		if (team == 2) // 2 = t, 3 = ct
 		{
 			iWin = RoundToNearest((float(iOdds[1]) / float(iOdds[0])) * float(amount));
-			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[1], iOdds[0], iWin, g_iPlayerBetData[client][BET_AMOUNT]);
+			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[1], iOdds[0], iWin, amount);
 		}
 		else
 		{
 			iWin = RoundToNearest((float(iOdds[0]) / float(iOdds[1])) * float(amount));
-			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[0], iOdds[1], iWin, g_iPlayerBetData[client][BET_AMOUNT]);
+			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[0], iOdds[1], iWin, amount);
 		}
 
 		g_iPlayerBetData[client][BET_WIN] = iWin;
 		
-		if (g_bOneVsMany && g_iOneVsManyTeam != g_iPlayerBetData[client][BET_TEAM])
+		if (g_bOneVsMany && g_iOneVsManyTeam != team)
 		{ 
 			g_iOneVsManyPot += amount;
 		}
