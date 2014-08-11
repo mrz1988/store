@@ -30,7 +30,7 @@
 	
 	"Not Enough Money"
 	{
-		"en"			"You do not have enough money for that bet."
+		"en"			"You do not have enough credits for that bet."
 		"fr"			"Vous n'avez pas assez d'argent pour ce pari."
 		"de"      		"Du hast nicht genügend Geld als Wetteinsatz"
 	}
@@ -38,9 +38,9 @@
 	"Bet Made"
 	{
 		"#format"		"{1:d},{2:d},{3:d},{4:d}"
-		"en"			"Bet placed. Odds are {1} to {2}. You stand to win ${3} on your ${4} bet."
-		"fr"			"Pari valide. Les cotes sont de {1} / {2}. Vous pouvez gagner {3}$ pour un pari de {4}$."
-		"de"      		"Wette abgegeben. Chancen stehen {1} zu {2}. Du kannst ${3} auf deine ${4} Wetteinsatz gewinnen."
+		"en"			"Bet placed. Odds are {1} to {2}. You stand to win {3} on your {4} credit bet."
+		"fr"			"Pari valide. Les cotes sont de {1} / {2}. Vous pouvez gagner {3} pour un pari de {4}."
+		"de"      		"Wette abgegeben. Chancen stehen {1} zu {2}. Du kannst {3} auf deine {4} Wetteinsatz gewinnen."
 	}
 	
 	"One Vs One"
@@ -61,25 +61,25 @@
 	"One Vs Many Winner"
 	{
 		"#format"		"{1:s},{2:d}"
-		"en"			"{1} has won against the odds! ${2} awarded from the losing pot!"
-		"fr"			"{1} a gagne contre la cote! Il gagne {2}$ !"
-		"de"      		"{1} hat gegen die Wettquote gewonnen! ${2} Belohnung finanziert aus dem Verlierertopf!"
+		"en"			"{1} has won against the odds! {2} credits awarded from the losing pot!"
+		"fr"			"{1} a gagne contre la cote! Il gagne {2} credits!"
+		"de"      		"{1} hat gegen die Wettquote gewonnen! {2} Credits belohnung finanziert aus dem Verlierertopf!"
 	}
 	
 	"Bet Won"
 	{
 		"#format"		"{1:d},{2:d}"
-		"en"			"You won ${1} on your bet of ${2}."
-		"fr"			"Vous gagnez {1}$ pour un pari de {2}$."
-		"de"      		"Du hast ${1} auf deinen Wetteinsatz von${2} gewonnen."
+		"en"			"You won {1} credits on your bet of {2}."
+		"fr"			"Vous gagnez {1} credits pour un pari de {2}."
+		"de"      		"Du hast {1} auf deinen Wetteinsatz von {2} gewonnen."
 	}
 	
 	"Bet Lost"
 	{
 		"#format"		"{1:d}"
-		"en"			"You lost your ${1} bet."
-		"fr"			"Vous perdez votre pari de {1}$."
-		"de"			"Du hast deinen Wetteinsatz in Höhe von {1}$ verloren."
+		"en"			"You lost your {1} credit bet."
+		"fr"			"Vous perdez votre pari de {1}."
+		"de"			"Du hast deinen Wetteinsatz in Höhe von {1} verloren."
 	}
 	
 	"Players Are Dead"
