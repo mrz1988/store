@@ -1,0 +1,98 @@
+"Phrases"
+{
+	"Already Betted"
+	{
+		"en"			"You have already placed a bet this round."
+		"fr"			"Vous avez deja parie ce round."
+		"de"      		"Du hast diese Runde schon eine Wette plaziert"
+	}
+	
+	"Must Be Dead To Vote"
+	{
+		"en"			"You must be dead to place a bet."
+		"fr"			"Seulement les morts peuvent parier."
+		"de"      		"Du musst tot sein um eine Wette abzugeben"
+	}
+	
+	"Invalid Team for Bet"
+	{
+		"en"			"Invalid team, please use 'ct' or 't'."
+		"fr"			"Team incorrecte, utiliser 'ct' ou 't'."
+		"de"     		"Ungültiges Team, verwende bitte 'ct' oder 't'."
+	}
+	
+	"Invalid Bet Amount"
+	{
+		"en"			"You do not specify a valid bet. Please use 'all', 'half', 'third' or a number."
+		"fr"			"Votre pari est incorrecte. Utiliser 'all', 'half', 'third' ou un nombre."
+		"de"      		"Du hast keine gültige Wette abgegeben. Bitte benutze 'all', 'half', 'third' oder einen Betrag."
+	}
+	
+	"Not Enough Money"
+	{
+		"en"			"You do not have enough money for that bet."
+		"fr"			"Vous n'avez pas assez d'argent pour ce pari."
+		"de"      		"Du hast nicht genügend Geld als Wetteinsatz"
+	}
+	
+	"Bet Made"
+	{
+		"#format"		"{1:d},{2:d},{3:d},{4:d}"
+		"en"			"Bet placed. Odds are {1} to {2}. You stand to win ${3} on your ${4} bet."
+		"fr"			"Pari valide. Les cotes sont de {1} / {2}. Vous pouvez gagner {3}$ pour un pari de {4}$."
+		"de"      		"Wette abgegeben. Chancen stehen {1} zu {2}. Du kannst ${3} auf deine ${4} Wetteinsatz gewinnen."
+	}
+	
+	"One Vs One"
+	{
+		"en"			"One vs One! Place your bets now!"
+		"fr"			"1 vs 1! Pariez maintenant!"
+		"de"      		"1 vs 1! Gebt jetzt eure Wettgebote ab!"
+	}
+	
+	"One Vs Many Start"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"                    "{1} vs the {2} team! Place your bets now!"
+		"fr"			"{1} vs l'équipe de {2}! Pariez maintenant!"
+		"ge"      		"{1} vs die {2} Mannschaft! Jetzt wetten!"
+	}
+	
+	"One Vs Many Winner"
+	{
+		"#format"		"{1:s},{2:d}"
+		"en"			"{1} has won against the odds! ${2} awarded from the losing pot!"
+		"fr"			"{1} a gagne contre la cote! Il gagne {2}$ !"
+		"de"      		"{1} hat gegen die Wettquote gewonnen! ${2} Belohnung finanziert aus dem Verlierertopf!"
+	}
+	
+	"Bet Won"
+	{
+		"#format"		"{1:d},{2:d}"
+		"en"			"You won ${1} on your bet of ${2}."
+		"fr"			"Vous gagnez {1}$ pour un pari de {2}$."
+		"de"      		"Du hast ${1} auf deinen Wetteinsatz von${2} gewonnen."
+	}
+	
+	"Bet Lost"
+	{
+		"#format"		"{1:d}"
+		"en"			"You lost your ${1} bet."
+		"fr"			"Vous perdez votre pari de {1}$."
+		"de"			"Du hast deinen Wetteinsatz in Höhe von {1}$ verloren."
+	}
+	
+	"Players Are Dead"
+	{
+		"en"			"You can't bet when either team is dead."
+		"fr"			"Vous ne pouvez parier quand tout le monde est mort."
+		"de"			"Du kannst keine Wette plazieren wenn eins der Teams tot ist."
+	}
+	
+	"Advertise Bets"
+	{
+		"en"			"Type 'bet team amount' to bet on the winning team!"
+		"fr"			"Tapez 'bet team amount' pour parier sur l'equipe en train de gagner!"
+		"de"			"Tippe 'bet team betrag' um auf das Gewinnerteam zu setzen!"
+	}
+}
