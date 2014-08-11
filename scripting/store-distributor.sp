@@ -169,6 +169,11 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 	decl String:victim_name[64];
 	new victim = GetClientOfUserId(victimId);
 	new attacker = GetClientOfUserId(attackerId);
+	
+	// Don't give them money for killing themselves/teammates
+	if (GetClientTeam(victim) == GetClientTeam(attacker))
+		return;
+	
 	GetClientName(victim, victim_name, sizeof(victim_name));
 	new winnerId = GetSteamAccountID(attacker);
 	
