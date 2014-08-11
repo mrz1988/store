@@ -4,6 +4,7 @@
  */
 
 #include <sourcemod>
+#include <store>
 
 #pragma semicolon 1
 
@@ -149,84 +150,29 @@ public Action:Command_Say(client, args)
 		return Plugin_Continue;
 	}
 	
-	new iAmount = 0;
-	new iBank = GetMoney(client);
+	new betTeam = (strcmp(szParts[1], "t", false) == 0 ? 2 : 3); // 2 = t, 3 = ct
+	
+	new Handle:pack = CreateDataPack();
+	WritePackCell(pack, client);
+	WritePackCell(pack, betTeam);
 	
 	if (IsCharNumeric(szParts[2][0]))
 	{
-		iAmount = StringToInt(szParts[2]);
+		WritePackCell(pack, StringToInt(szParts[2]));
+		Store_GetCredits(GetSteamAccountID(client), TryBetAmount, pack);
 	}
 	else if (strcmp(szParts[2],"all",false) == 0)
 	{
-		iAmount = iBank;
+		Store_GetCredits(GetSteamAccountID(client), TryBetAll, pack);
 	}
 	else if (strcmp(szParts[2],"half", false) == 0)
 	{
-		iAmount = (iBank / 2) + 1;
+		Store_GetCredits(GetSteamAccountID(client), TryBetHalf, pack);
 	}
 	else if (strcmp(szParts[2],"third", false) == 0)
 	{
-		iAmount = (iBank / 3) + 1;
+		Store_GetCredits(GetSteamAccountID(client), TryBetThird, pack);
 	}
-
-	if (iAmount < 1)
-	{
-		PrintToChat(client, "[Bet] %t", "Invalid Bet Amount");
-		return Plugin_Continue;
-	}		
-	
-	if (iAmount > iBank || iBank < 1)
-	{
-		PrintToChat(client, "[Bet] %t", "Not Enough Money");
-		return Plugin_Continue;
-	}
-	
-	new iOdds[2] = {0, 0}, iTeam;
-	new iMaxClients = GetMaxClients();
-
-	for (new i = 1; i <= iMaxClients; i++)
-	{
-		if (IsClientInGame(i) && IsAlive(i))
-		{
-			iTeam = GetClientTeam(i);
-			if (iTeam == 2) // 2 = t, 3 = ct
-				iOdds[0]++;
-			else if (iTeam == 3)
-				iOdds[1]++;			
-		}
-	}
-	
-	if (iOdds[0] < 1 || iOdds[1] < 1)
-	{
-		PrintToChat(client, "[Bet] %t", "Players Are Dead");
-		return Plugin_Continue;		
-	}
-	
-	g_iPlayerBetData[client][BET_AMOUNT] = iAmount;
-	g_iPlayerBetData[client][BET_TEAM] = (strcmp(szParts[1],"t",false) == 0 ? 2 : 3); // 2 = t, 3 = ct
-	
-	new iWin;
-	
-	if (g_iPlayerBetData[client][BET_TEAM] == 2) // 2 = t, 3 = ct
-	{
-		iWin = RoundToNearest((float(iOdds[1]) / float(iOdds[0])) * float(iAmount));
-		PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[1], iOdds[0], iWin, g_iPlayerBetData[client][BET_AMOUNT]);		
-	}
-	else
-	{
-		iWin = RoundToNearest((float(iOdds[0]) / float(iOdds[1])) * float(iAmount));
-		PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[0], iOdds[1], iWin, g_iPlayerBetData[client][BET_AMOUNT]);
-	}
-
-	g_iPlayerBetData[client][BET_WIN] = iWin;
-	g_bPlayerBet[client] = true;
-	
-	if (g_bOneVsMany && g_iOneVsManyTeam != g_iPlayerBetData[client][BET_TEAM])
-	{ 
-		g_iOneVsManyPot += iAmount;
-	}
-
-	SetMoney(client, iBank - iAmount);
 
 	return Plugin_Continue;
 }
@@ -307,13 +253,13 @@ public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 		{
 			GetClientName(iTPlayer, pname, 64);
 			PrintToChatAll("[Bet] %T", "One Vs Many Winner", LANG_SERVER, pname, g_iOneVsManyPot);
-			SetMoney(iTPlayer, GetMoney(iTPlayer) + g_iOneVsManyPot);
+			Store_GiveCredits(GetSteamAccountID(iTPlayer), g_iOneVsManyPot);
 		}
 		else if (iTeams[1] == 1 && iTeams[0] == 0 && g_bOneVsMany && g_iOneVsManyTeam == 3)
 		{
 			GetClientName(iCTPlayer, pname, 64);
 			PrintToChatAll("[Bet] %T", "One Vs Many Winner", LANG_SERVER, pname, g_iOneVsManyPot);
-			SetMoney(iCTPlayer, GetMoney(iCTPlayer) + g_iOneVsManyPot);		
+			Store_GiveCredits(GetSteamAccountID(iCTPlayer), g_iOneVsManyPot);		
 		}
 	}
 }
@@ -332,7 +278,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 		{
 			if (iWinner == g_iPlayerBetData[i][BET_TEAM])
 			{
-				SetMoney(i,GetMoney(i) + g_iPlayerBetData[i][BET_AMOUNT] + g_iPlayerBetData[i][BET_WIN]);
+				Store_GiveCredits(GetSteamAccountID(i), g_iPlayerBetData[i][BET_AMOUNT] + g_iPlayerBetData[i][BET_WIN]);
 				PrintToChat(i, "[Bet] %t", "Bet Won", g_iPlayerBetData[i][BET_WIN], g_iPlayerBetData[i][BET_AMOUNT]);
 			}
 			else
@@ -341,7 +287,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 			}
 		}
 		
-		g_bPlayerBet[i] = false;		
+		g_bPlayerBet[i] = false;
 	}
 	
 	g_bOneVsMany = false;
@@ -364,16 +310,118 @@ public bool:IsAlive(client)
     return false;
 } 
 
-public SetMoney(client, amount)
+public TryBetAll(credits, any:pack)
 {
-	if (g_iAccount != -1)
-		SetEntData(client, g_iAccount, amount);
+	ResetPack(pack);
+	new client = GetClientFromSerial(ReadPackCell(pack));
+	new team = ReadPackCell(pack);
+	
+	if (credits < 1)
+		InsufficientFunds(client);
+	else
+		Bet(client, team, credits, credits);
 }
 
-public GetMoney(client)
+public TryBetHalf(credits, any:pack)
 {
-	if (g_iAccount != -1)
-		return GetEntData(client, g_iAccount);
+	ResetPack(pack);
+	new client = GetClientFromSerial(ReadPackCell(pack));
+	new team = ReadPackCell(pack);
+	
+	if (credits < 2)
+		InsufficientFunds(client);
+	else
+		Bet(client, team, credits / 2 + 1, credits);
+}
 
-	return 0;
+public TryBetThird(credits, any:pack)
+{
+	ResetPack(pack);
+	new client = GetClientFromSerial(ReadPackCell(pack));
+	new team = ReadPackCell(pack);
+	
+	if (credits < 3)
+		InsufficientFunds(client);
+	else
+		Bet(client, team, credits / 3 + 1, credits);
+}
+
+public TryBetAmount(credits, any:pack)
+{
+	ResetPack(pack);
+	
+	new client = GetClientFromSerial(ReadPackCell(pack));
+	new team = ReadPackCell(pack);
+	new amount = ReadPackCell(pack);
+	
+	if (credits < amount)
+		InsufficientFunds(client);
+	else
+		Bet(client, team, amount, credits);
+}
+
+public Bet(client, team, amount, clientCredits)
+{
+	if (amount < 1)
+		InvalidBet(client);
+	else if (clientCredits < amount)
+		InsufficientFunds(client);
+	else
+	{
+		new iOdds[2] = {0, 0}, iTeam;
+		new iMaxClients = GetMaxClients();
+
+		for (new i = 1; i <= iMaxClients; i++)
+		{
+			if (IsClientInGame(i) && IsAlive(i))
+			{
+				iTeam = GetClientTeam(i);
+				if (iTeam == 2) // 2 = t, 3 = ct
+					iOdds[0]++;
+				else if (iTeam == 3)
+					iOdds[1]++;	
+			}
+		}
+		
+		if (iOdds[0] < 1 || iOdds[1] < 1)
+		{
+			PrintToChat(client, "[Bet] %t", "Players Are Dead");
+			return;
+		}
+		
+		new iWin;
+		
+		if (team == 2) // 2 = t, 3 = ct
+		{
+			iWin = RoundToNearest((float(iOdds[1]) / float(iOdds[0])) * float(amount));
+			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[1], iOdds[0], iWin, g_iPlayerBetData[client][BET_AMOUNT]);
+		}
+		else
+		{
+			iWin = RoundToNearest((float(iOdds[0]) / float(iOdds[1])) * float(amount));
+			PrintToChat(client, "[Bet] %t", "Bet Made", iOdds[0], iOdds[1], iWin, g_iPlayerBetData[client][BET_AMOUNT]);
+		}
+
+		g_iPlayerBetData[client][BET_WIN] = iWin;
+		
+		if (g_bOneVsMany && g_iOneVsManyTeam != g_iPlayerBetData[client][BET_TEAM])
+		{ 
+			g_iOneVsManyPot += amount;
+		}
+		
+		Store_GiveCredits(GetSteamAccountID(client), -amount);
+		g_iPlayerBetData[client][BET_AMOUNT] = amount;
+		g_iPlayerBetData[client][BET_TEAM] = team;
+		g_bPlayerBet[client] = true;
+	}
+}
+
+public InsufficientFunds(client)
+{
+	PrintToChatAll("Insufficient Funds");
+}
+
+public InvalidBet(client)
+{
+	PrintToChatAll("Invalid Bet");
 }
