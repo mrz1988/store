@@ -20,6 +20,11 @@
 	{
 		"en"				"Loadout"	
 	}
+	
+	"Credit Earning"
+	{
+		"en"				"How to earn credits"
+	}
 
 	"No items in this category"
 	{
